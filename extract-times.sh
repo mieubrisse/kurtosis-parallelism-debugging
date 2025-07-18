@@ -17,16 +17,24 @@ service_ids=(
     "${check_if_osaka}"
 )
 
+# metrics=(
+#     "filesArtifactExpansion"
+#     "createAndStartContainer"
+#     "createStartServiceOperation"
+# )
+
+
 metrics=(
-    "filesArtifactExpansion"
-    "createAndStartContainer"
+    "finished files artifacts expansion"
+    "creating and starting container"
     "createStartServiceOperation"
 )
 
-for service_id in "${service_ids}"; do
+for service_id in "${service_ids[@]}"; do
+    echo "------ ${service_id} -------"
     for metric in "${metrics[@]}"; do
-        # grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}" | grep "${metric}" | sed "s/.*took //g"
-        grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}"
+        grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}" | grep "${metric}" | grep "took" | sed "s/.*took //g"
+        # grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}" | grep "${metric}" 
     done
 done
 

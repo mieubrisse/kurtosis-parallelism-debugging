@@ -2,10 +2,6 @@
 
 set -euo pipefail
 
-if [ "${#}" -ne 4 ]; then
-    echo "${0} filepath"
-fi
-
 filepath="${1}"
 
 # metrics=(
@@ -26,6 +22,7 @@ service_ids=(
     "${4}"
 )
 
+# service_ids=()
 # for service_name in "${service_names[@]}"; do
 #     service_id="$(grep -A1 "finished registering services \[${service_name}\]" "${filepath}" | tail -1 | sed "s/.*Starting service '\(.*\)'/\1/g")"
 #     service_ids+=("${service_id:0:8}")
@@ -36,18 +33,22 @@ service_ids=(
 metrics=(
     "filesArtifactsExpansion"
     "createAndStartContainer"
+    "fetchImage"
     "getNetworksByFilterArgs"
     "containerCreate"
-    "↳ connectContainerToNetwork"
+    "connectContainerToNetwork"
     "createStartServiceOperation"
 )
 
 for service_id in "${service_ids[@]}"; do
+    if [ -z "${service_id}" ]; then
+        echo "Empty service ID"
+        exit 1
+    fi
+
     echo "------ ${service_id} -------"
     for metric in "${metrics[@]}"; do
-        grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}" | grep "${metric}" | grep "took" | sed "s/.*took //g"
-        # grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}"
-        # grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}" | grep "${metric}" 
+        grep "IN" "${filepath}" | grep "${service_id}" | grep "finished ${metric}" | grep "took" | sed "s/.*took //g"
     done
 done
 

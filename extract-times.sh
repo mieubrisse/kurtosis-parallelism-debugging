@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [ "${#}" -ne 4 ]; then
+    echo "${0} filepath read_genesis read_osaka check_if_osaka"
+fi
+
+filepath="${1}"
+read_genesis="${2}"
+read_osaka="${3}"
+check_if_osaka="${4}"
+
+service_ids=(
+    "${read_genesis}"
+    "${read_osaka}"
+    "${check_if_osaka}"
+)
+
+metrics=(
+    "filesArtifactExpansion"
+    "createAndStartContainer"
+    "createStartServiceOperation"
+)
+
+for service_id in "${service_ids}"; do
+    for metric in "${metrics[@]}"; do
+        # grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}" | grep "${metric}" | sed "s/.*took //g"
+        grep "IN START SERVICE OPERATION" "${filepath}" | grep "${service_id}"
+    done
+done
+

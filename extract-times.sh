@@ -36,6 +36,9 @@ service_ids=(
 metrics=(
     "filesArtifactsExpansion"
     "createAndStartContainer"
+    "getNetworksByFilterArgs"
+    "containerCreate"
+    "↳ connectContainerToNetwork"
     "createStartServiceOperation"
 )
 
